@@ -169,7 +169,7 @@ def init_model(key, base_channels=64, time_dim=128):
     }
 
 
-def model_apply(params, x, t):
+def model_apply(params, x, t, return_features=False):
     t_emb = time_embedding(t, params["time"])
 
     x = conv(x, params["input"])
@@ -186,6 +186,9 @@ def model_apply(params, x, t):
 
     x = resblock(x, t_emb, params["mid1"])
     x = resblock(x, t_emb, params["mid2"])
+
+    if return_features:
+        return x
 
     x = jax.image.resize(
         x,
